@@ -34,9 +34,9 @@ class Settings:
 def load_settings() -> Settings:
     _load_dotenv()
     return Settings(
-        llm_base_url=os.environ.get("AGENT_LLM_BASE_URL", "https://nodlink.cn/v1"),
+        llm_base_url=os.environ.get("AGENT_LLM_BASE_URL", "https://api.deepseek.com/v1"),
         llm_api_key=os.environ.get("AGENT_LLM_API_KEY", ""),
-        llm_model=os.environ.get("AGENT_LLM_MODEL", "gpt-5.5"),
+        llm_model=os.environ.get("AGENT_LLM_MODEL", "deepseek-v4-pro"),
         temperature=float(os.environ.get("AGENT_TEMPERATURE", "0.7")),
         max_turns=int(os.environ.get("AGENT_MAX_TURNS", "20")),
         max_tokens=int(os.environ.get("AGENT_MAX_TOKENS", "8000")),

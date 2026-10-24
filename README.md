@@ -20,7 +20,7 @@
 | 异常处理 | LLM 重试、工具异常回传、坏 JSON 降级、循环次数兜底 |
 | 工具调用 trace / 执行日志 | `agent/logger.py`，写 `session.trace` + 打日志 |
 | 测试用例 | `tests/`，30 个用例，覆盖上述全部 |
-| 真实 LLM API | OpenAI 兼容接口，默认走诺联网关 `https://nodlink.cn/v1` |
+| 真实 LLM API | OpenAI 兼容接口，已用 DeepSeek 官方接口实测（`deepseek-v4-pro`），任意 OpenAI 兼容网关可换 |
 
 ---
 
@@ -34,9 +34,9 @@
 项目根目录建 `.env`（已提供 `.env.example` 可复制改）：
 
 ```bash
-AGENT_LLM_BASE_URL=https://nodlink.cn/v1     # 或任意 OpenAI 兼容网关
-AGENT_LLM_API_KEY=sk-你的令牌                 # 必填，不写死、不提交
-AGENT_LLM_MODEL=gpt-5.5
+AGENT_LLM_BASE_URL=https://api.deepseek.com/v1   # 或任意 OpenAI 兼容网关，如 https://nodlink.cn/v1
+AGENT_LLM_API_KEY=sk-你的令牌                     # 必填，不写死、不提交
+AGENT_LLM_MODEL=deepseek-v4-pro                  # 诺联可用 gpt-5.5 等
 ```
 
 也支持直接设环境变量（Windows：`set AGENT_LLM_API_KEY=sk-xxx`；Linux/Mac：`export ...`）。
