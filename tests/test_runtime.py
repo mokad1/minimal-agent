@@ -86,3 +86,19 @@ def test_trace_recorded():
     assert "tool_call" in events
     assert "tool_result" in events
     assert "final_answer" in events
+
+
+def test_compression_triggered_in_runtime():
+    # 第 3 轮超过 max_turns=2，主循环应触发压缩（调用注入的 summarizer）
+    settings = make_settings(max_turns=2, keep_turns=1)
+    script = [resp(content="ok1"), resp(content="ok2"), resp(content="ok3")]
+    rt, sessions, llm = build_runtime(script, settings=settings)
+    rt.run("s1", "q1")
+    rt.run("s1", "q2")
+    rt.run("s1", "q3")
+
+    s = sessions.get("s1")
+    assert s.context.turn_count == 1  # 压缩后只保留最近 keep_turns 轮
+    third = llm.calls[2]["messages"]
+    assert any(m["role"] == "system" and "SUMMARY" in m["content"] for m in third)
+    assert any(e["type"] == "compress" for e in s.trace)
