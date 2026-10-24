@@ -5,18 +5,27 @@ import os
 from dataclasses import dataclass
 
 
-def _load_dotenv(path: str = ".env") -> None:
-    """极简 .env 加载：只补环境变量里不存在的键，不依赖第三方库。"""
-    try:
-        with open(path, encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if not line or line.startswith("#") or "=" not in line:
-                    continue
-                k, v = line.split("=", 1)
-                os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
-    except FileNotFoundError:
-        pass
+_PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def _load_dotenv() -> None:
+    """极简 .env 加载：只补环境变量里不存在的键，不依赖第三方库。
+
+    先找当前工作目录，再找项目根目录。这样在 PyCharm 里直接运行
+    examples/demo.py（工作目录是 examples/）也能读到根目录的 .env。
+    """
+    for path in (".env", os.path.join(_PROJECT_ROOT, ".env")):
+        try:
+            with open(path, encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith("#") or "=" not in line:
+                        continue
+                    k, v = line.split("=", 1)
+                    os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+            return
+        except FileNotFoundError:
+            continue
 
 
 @dataclass
